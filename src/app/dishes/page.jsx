@@ -1,37 +1,35 @@
-// src/app/dishes/page.jsx
-import React from 'react';
-import axios from 'axios';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
+"use client"
+import Link from 'next/link'
+import React, { useEffect, useState } from 'react'
 
-async function fetchDishes() {
-    try {
-        const response = await axios.get('https://dummyjson.com/recipes');
-        return response.data;
-    } catch (error) {
-        console.error('Error fetching data:', error);
-        return [];
+
+export default function Page() {
+  // Initialize data as an empty array
+  const [data, setData] = useState([])
+
+  useEffect(() => {
+    // Fetch data
+    const fetchData = async () => {
+      const response = await fetch('https://dummyjson.com/recipes')
+      const result = await response.json()
+      console.log(result)
+      setData(result.recipes || []) // Assume the recipes are in `result.recipes`
     }
+    fetchData()
+  }, [])
+  console.log(data);
+  return (
+    <div className='lg:grid grid-cols-4 h-96 gap-20 '>
+      {
+        data.map((recipe) => (
+          <div
+            className='h-40 ' key={recipe.id}>
+            <img className='h-full w-full object-cover' src={recipe.image} alt={recipe.name} />
+            <Link href={`dishes/${recipe.id}`}> <h2 className='border py-4 text-center text-2xl font-semibold'>{recipe.name}</h2>
+            </Link>
+          </div>
+        ))
+      }
+    </div>
+  )
 }
-
-export default async function Dishes() {
-    const data = await fetchDishes();
-    return (
-        <div>
-            <h1 className='text-3xl font-semibold text-center my-2'>All Dishes are here</h1>
-            <div className='grid grid-cols-1 md:grid-cols-3 gap-4 text-center '>
-                {data && data.recipes?.map((dish) => (
-                    <div key={dish.id} className='border p-4 rounded-lg gap-y-2'>
-                        <h2 className='text-xl font-bold '>{dish.name}</h2>
-                        <p className='gap-y-2'>ratings : {dish.servings}</p>
-                        <Link href={`dishes/details/${dish.id}`}><Button  className='border p-2 mt-2'>view details</Button></Link>
-                    </div>
-                ))}
-            </div>
-        </div>
-    );
-}
-
-// export function ButtonLink() {
-//   return <Button variant="link">Link</Button>
-// }
