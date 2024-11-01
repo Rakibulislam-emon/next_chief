@@ -22,12 +22,11 @@ export default function Page() {
     <div className='lg:grid grid-cols-4 h-96 gap-20 '>
       {
         data.map((recipe) => (
-          <div
+          <Link href={`dishes/${recipe.id}`}
             className='h-40 ' key={recipe.id}>
             <img className='h-full w-full object-cover' src={recipe.image} alt={recipe.name} />
-            <Link href={`dishes/${recipe.id}`}> <h2 className='border py-4 text-center text-2xl font-semibold'>{recipe.name}</h2>
-            </Link>
-          </div>
+            <h2 className='border py-4 text-center text-2xl font-semibold'>{recipe.name}</h2>
+          </Link>
         ))
       }
     </div>
